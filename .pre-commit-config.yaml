@@ -35,7 +35,7 @@ repos:
     hooks:
       - id: prettier
         args: ['--tab-width', '2', '--single-quote']
-        exclude: 'dtautomation/templates/'
+        exclude: 'rotary_lights_website/templates/'
 
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.4.0
