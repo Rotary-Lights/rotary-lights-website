@@ -185,7 +185,12 @@ THIRD_PARTY_APPS = [
 
 # Local apps
 LOCAL_APPS = [
+    "rotary_lights_website.contact",
+    "rotary_lights_website.content",
+    "rotary_lights_website.core",
+    "rotary_lights_website.shop",
     "rotary_lights_website.users",
+    "rotary_lights_website.volunteering",
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
