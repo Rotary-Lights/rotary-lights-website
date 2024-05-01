@@ -1,8 +1,13 @@
 # General
 # ------------------------------------------------------------------------------
-DJANGO_SECRET_KEY="mysecretkey"
+DJANGO_DEBUG=True
+DJANGO_SECRET_KEY=mysecretkey
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0,rotarylights.local
+DJANGO_ADMIN_URL=django-admin/
+WAGTAIL_ADMIN_URL=admin/
 USE_DOCKER=yes
 IPYTHONDIR=/app/.ipython
+
 # Redis
 # ------------------------------------------------------------------------------
 REDIS_URL=redis://redis:6379/0

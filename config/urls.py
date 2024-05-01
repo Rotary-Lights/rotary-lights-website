@@ -7,21 +7,29 @@ from django.urls import include
 from django.urls import path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
+from coderedcms import admin_urls as crx_admin_urls
+from coderedcms import search_urls as crx_search_urls
+from coderedcms import urls as crx_urls
+from django.conf import settings
+from django.contrib import admin
+from django.urls import include
+from django.urls import path
+from wagtail.documents import urls as wagtaildocs_urls
+from wagtail.admin import urls as wagtailadmin_urls
+from wagtail import urls as wagtail_urls
+from wagtail.documents import urls as wagtaildocs_urls
 
 urlpatterns = [
-    path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
-    path(
-        "about/",
-        TemplateView.as_view(template_name="pages/about.html"),
-        name="about",
-    ),
-    # Django Admin, use {% url 'admin:index' %}
-    path(settings.ADMIN_URL, admin.site.urls),
+    # Admin, use {% url 'admin:index' %}
+    path(settings.DJANGO_ADMIN_URL, admin.site.urls),
+    path(settings.WAGTAIL_ADMIN_URL, include(crx_admin_urls)),
+    # Documents
+    path("documents/", include(wagtaildocs_urls)),
+    # Search
+    path("search/", include(crx_search_urls)),
     # User management
     path("users/", include("rotary_lights_website.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
-    # Your stuff: custom urls includes go here
-    # ...
     # Media files
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
 ]
@@ -55,3 +63,10 @@ if settings.DEBUG:
         import debug_toolbar
 
         urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
+
+urlpatterns += [
+    # For anything not caught by a more specific rule above, hand over to
+    # the page serving mechanism. This should be the last pattern in
+    # the list:
+    path("", include(crx_urls)),
+]

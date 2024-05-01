@@ -82,8 +82,7 @@ def load_env_variable_by_name(
         such as str, bool, or int. Defaults to str.
         default (T | None, optional): The default value to return if the
         variable is not found. Raises `ImproperlyConfigured` if not
-        provided.
-        Defaults to _NOT_PROVIDED.
+        provided. Defaults to _NOT_PROVIDED.
 
     Raises:
         ImproperlyConfigured: If the variable could not be found and no
@@ -148,12 +147,14 @@ def load_setting(  # noqa: PLR0913
     last_exception = None
     if try_secrets:
         try:
-            return load_secret_by_name(
+            value = load_secret_by_name(
                 name=name,
                 primitive_type=primitive_type,
                 default=default,
                 path=custom_secrets_path,
             )
+            if not try_env:
+                return value
         except ImproperlyConfigured as e:
             last_exception = e
 

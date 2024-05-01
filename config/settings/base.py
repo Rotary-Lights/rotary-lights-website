@@ -20,13 +20,11 @@ DEBUG = load_setting("DJANGO_DEBUG", bool, default=False)
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = load_setting(
     "DJANGO_SECRET_KEY",
-    str,
-    try_secrets=not DEBUG,
     try_env=DEBUG,
 )
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS: list[str] = env.list("ALLOWED_HOSTS")
+ALLOWED_HOSTS: list[str] = env.list("DJANGO_ALLOWED_HOSTS")
 
 # Local time zone. Choices are
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
