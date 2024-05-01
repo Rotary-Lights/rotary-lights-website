@@ -1,4 +1,6 @@
-# ruff: noqa
+from coderedcms import admin_urls as crx_admin_urls
+from coderedcms import search_urls as crx_search_urls
+from coderedcms import urls as crx_urls
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -6,17 +8,6 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include
 from django.urls import path
 from django.views import defaults as default_views
-from django.views.generic import TemplateView
-from coderedcms import admin_urls as crx_admin_urls
-from coderedcms import search_urls as crx_search_urls
-from coderedcms import urls as crx_urls
-from django.conf import settings
-from django.contrib import admin
-from django.urls import include
-from django.urls import path
-from wagtail.documents import urls as wagtaildocs_urls
-from wagtail.admin import urls as wagtailadmin_urls
-from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 urlpatterns = [
@@ -62,7 +53,7 @@ if settings.DEBUG:
     if "debug_toolbar" in settings.INSTALLED_APPS:
         import debug_toolbar
 
-        urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
+        urlpatterns += [path("__debug__/", include(debug_toolbar.urls))]
 
 urlpatterns += [
     # For anything not caught by a more specific rule above, hand over to
