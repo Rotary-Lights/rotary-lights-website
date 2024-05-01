@@ -247,7 +247,7 @@ force-single-line = true
 name = "rotary_lights_website"
 version = "0.0.0" # Placeholder; configured by poetry-dynamic-versioning
 description = "The source code powering the website for the Rotary Lights Club of La Crosse, WI."
-authors = ["Rotary Lights of La Crosse <>"]
+authors = ["Rotary Lights of La Crosse <rotarylights@gmail.com>"]
 maintainers = ["Dakota Horstman <dakota.horstman2001@gmail.com>"]
 readme = "README.md"
 homepage = "https://rotarylights.org/"
@@ -284,6 +284,48 @@ exclude = [
     "tests",
 ]
 dependencies.python = ">=3.12,<3.13"
+dependencies.psycopg = { extras = ["binary", "pool"], version = "^3.1.18" }
+dependencies.django-polymorphic = "^3.1.0"
+dependencies.coderedcms = { git = "https://github.com/dakotahorstman/coderedcms" }
+dependencies.django-sass = "^1.1.0"
+dependencies.django-cors-headers = "^4.3.1"
+dependencies.wagtail = "^6.0.1"
+dependencies.django-model-utils = "^4.4.0"
+dependencies.django-allauth = { extras = ["mfa"], version = "^0.61.1" }
+dependencies.django-crispy-forms = "^2.1"
+dependencies.crispy-bootstrap5 = "^2024.2"
+dependencies.django-compressor = "^4.4"
+dependencies.python-slugify = "^8.0.4"
+dependencies.rcssmin = "1.1.1"
+dependencies.argon2-cffi = "^23.1.0"
+dependencies.hiredis = "^2.3.2"
+dependencies.uvicorn = { extras = ["standard"], version = "^0.27.1" }
+dependencies.channels = "^4.0.0"
+dependencies.channels-redis = "^4.2.0"
+dependencies.redis = "^5.0.2"
+dependencies.django-redis = "^5.4.0"
+dependencies.loguru = "^0.7.2"
+dependencies.whitenoise = "^6.6.0"
+dependencies.django = "^5.0.2"
+dependencies.django-environ = "^0.11.2"
+
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.6.2"
+detect-secrets = "^1.4.0"
+ipython = "^8.22.1"
+pytest = "^8.0.2"
+coverage = "^7.4.3"
+django-coverage-plugin = "^3.1.0"
+pytest-django = "^4.8.0"
+django-debug-toolbar = "^4.3.0"
+django-extensions = "^3.2.3"
+daphne = "^4.1.0"
+werkzeug = { extras = ["watchdog"], version = "^3.0.1" }
+ipdb = "^0.13.13"
+psycopg = { extras = ["binary", "pool"], version = "^3.1.18" }
+watchfiles = "^0.21.0"
+sphinx = "^7.2.6"
+furo = "^2024.1.29"
+factory-boy = "^3.3.0"
+django-stubs = { extras = ["compatible-mypy"], version = "^4.2.7" }

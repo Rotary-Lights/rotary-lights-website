@@ -8,5 +8,4 @@
 .readthedocs.yml
 .travis.yml
 venv
-.git
 .envs/
