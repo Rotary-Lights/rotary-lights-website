@@ -1,5 +1,6 @@
 # General
 # ------------------------------------------------------------------------------
+DJANGO_SECRET_KEY="mysecretkey"
 USE_DOCKER=yes
 IPYTHONDIR=/app/.ipython
 # Redis
