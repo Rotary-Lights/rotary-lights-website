@@ -40,7 +40,7 @@ services:
     image: docker.io/axllent/mailpit:latest
     container_name: rotary_lights_website_local_mailpit
     ports:
-      - "8025:8025"
+      - '8025:8025'
 
   redis:
     image: docker.io/redis:6
