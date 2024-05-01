@@ -1,0 +1,289 @@
+# Build System
+# ----------------------------------------------------------------------
+
+[build-system]
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
+build-backend = "poetry_dynamic_versioning.backend"
+
+
+# Poetry Dynamic Versioning
+# ----------------------------------------------------------------------
+
+[tool.poetry-dynamic-versioning]
+enable = true
+pattern = "default-unprefixed"
+
+
+# pytest
+# ----------------------------------------------------------------------
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "--ds=config.settings.test --reuse-db --strict-markers -s"
+python_files = ["tests.py", "test_*.py"]
+norecursedirs = [
+    "__pycache__",
+    ".envs",
+    "*.egg",
+    ".eggs",
+    ".github",
+    ".tox",
+    ".vscode",
+    "assets",
+    "bin",
+    "build",
+    "dist",
+    "docs/conf.py",
+    "locale",
+    "requirements",
+]
+filterwarnings = [
+    "error",
+    "ignore::DeprecationWarning:twisted.*",
+    "ignore::DeprecationWarning:l18n.translation.*",
+    "ignore::django.utils.deprecation.RemovedInDjango60Warning:django.db.models.fields.*",
+    "ignore::django.utils.deprecation.RemovedInDjango60Warning:wagtail.admin.forms.choosers.*",
+]
+
+
+# coverage
+# ----------------------------------------------------------------------
+
+[tool.coverage.run]
+source = ["rotary_lights_website"]
+omit = [
+    "*/migrations/*",
+    "*/tests/*",
+    "*/conftest.py",
+    "*/.tox/*",
+    "*/__main__.py",
+    "*/settings/*",
+    "*/templates/*",
+]
+plugins = ["django_coverage_plugin"]
+
+[tool.coverage.report]
+fail_under = 95
+show_missing = true
+exclude_also = [
+    # Don't complain about missing debug-only code:
+    "def __repr__",
+    "if self\\.debug",
+
+    # Don't complain if tests don't hit defensive assertion code:
+    "raise AssertionError",
+    "raise NotImplementedError",
+
+    # Don't complain if non-runnable code isn't run:
+    "if 0:",
+    "if __name__ == .__main__.:",
+
+    # Don't complain about abstract methods, they aren't run:
+    "@(abc\\.)?abstractmethod",
+
+    # Don't complain about explicitly skipped lines
+    "pragma: no cover",
+]
+
+
+# mypy
+# ----------------------------------------------------------------------
+
+[tool.mypy]
+allow_redefinition = false
+check_untyped_defs = true
+ignore_errors = false
+ignore_missing_imports = true
+implicit_reexport = false
+local_partial_types = true
+strict_optional = true
+strict_equality = true
+no_implicit_optional = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+warn_unreachable = true
+warn_no_return = true
+plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
+mypy_path = "rotary_lights_website"
+
+[[tool.mypy.overrides]]
+# Django migrations should not produce any errors:
+module = "*.migrations.*"
+ignore_errors = true
+
+
+# django-stubs
+# ----------------------------------------------------------------------
+
+[tool.django-stubs]
+django_settings_module = "config.settings.dev"
+
+
+# ruff
+# ----------------------------------------------------------------------\
+
+[tool.ruff]
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    "*/migrations/*.py",
+    "staticfiles/*",
+]
+# Same as Django: https://github.com/cookiecutter/cookiecutter-django/issues/4792.
+line-length = 100
+indent-width = 4
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "F",
+    "E",
+    "W",
+    "C90",
+    "I",
+    "N",
+    "UP",
+    "YTT",
+    # "ANN", # flake8-annotations: we should support this in the future but 100+ errors atm
+    "ASYNC",
+    "S",
+    "BLE",
+    "FBT",
+    "B",
+    "A",
+    "COM",
+    "C4",
+    "DTZ",
+    "T10",
+    "DJ",
+    "EM",
+    "EXE",
+    "FA",
+    'ISC',
+    "ICN",
+    "G",
+    'INP',
+    'PIE',
+    "T20",
+    'PYI',
+    'PT',
+    "Q",
+    "RSE",
+    "RET",
+    "SLF",
+    "SLOT",
+    "SIM",
+    "TID",
+    "TCH",
+    "INT",
+    # "ARG", # Unused function argument
+    "PTH",
+    "ERA",
+    "PD",
+    "PGH",
+    "PL",
+    "TRY",
+    "FLY",
+    # "NPY",
+    # "AIR",
+    "PERF",
+    # "FURB",
+    # "LOG",
+    "RUF",
+]
+ignore = [
+    "S101",   # Use of assert detected https://docs.astral.sh/ruff/rules/assert/
+    "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
+    "SIM102", # sometimes it's better to nest
+    "UP038",  # Checks for uses of isinstance/issubclass that take a tuple
+    # of types for comparison.
+    # Deactivated because it can make the code slow:
+    # https://github.com/astral-sh/ruff/issues/7871
+]
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+# The fixes in extend-unsafe-fixes will require
+# provide the `--unsafe-fixes` flag when fixing.
+extend-unsafe-fixes = ["UP038"]
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.ruff.lint.isort]
+force-single-line = true
+
+
+# Poetry & Project
+# ----------------------------------------------------------------------
+
+[tool.poetry]
+name = "rotary_lights_website"
+version = "0.0.0" # Placeholder; configured by poetry-dynamic-versioning
+description = "The source code powering the website for the Rotary Lights Club of La Crosse, WI."
+authors = ["Rotary Lights of La Crosse <>"]
+maintainers = ["Dakota Horstman <dakota.horstman2001@gmail.com>"]
+readme = "README.md"
+homepage = "https://rotarylights.org/"
+repository = "https://github.com/Rotary-Lights/rotary-lights-website"
+documentation = "https://github.com/Rotary-Lights/rotary-lights-website"
+keywords = ["rotary", "lights", "website", "la crosse"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Web Environment",
+    "Framework :: Django :: 5",
+    "Intended Audience :: End Users/Desktop",
+    "License :: Other/Proprietary License",
+    "Natural Language :: English",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Internet :: WWW/HTTP :: WSGI",
+    "Typing :: Typed",
+]
+exclude = [
+    "__pycache__",
+    ".envs",
+    "*.egg",
+    ".eggs",
+    ".github",
+    ".tox",
+    ".vscode",
+    "assets",
+    "bin",
+    "build",
+    "dist",
+    "docs/conf.py",
+    "locale",
+    "requirements",
+    "tests",
+]
+dependencies.python = ">=3.12,<3.13"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.6.2"
