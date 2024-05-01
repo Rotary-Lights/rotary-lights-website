@@ -220,6 +220,7 @@ ignore = [
     # of types for comparison.
     # Deactivated because it can make the code slow:
     # https://github.com/astral-sh/ruff/issues/7871
+    "EXE002", # Checks for executable .py files that do not have a shebang
 ]
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]
@@ -257,7 +258,8 @@ keywords = ["rotary", "lights", "website", "la crosse"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Web Environment",
-    "Framework :: Django :: 5",
+    "Framework :: Django :: 5.0",
+    "Framework :: Wagtail :: 6",
     "Intended Audience :: End Users/Desktop",
     "License :: Other/Proprietary License",
     "Natural Language :: English",
@@ -284,7 +286,7 @@ exclude = [
     "tests",
 ]
 dependencies.python = ">=3.12,<3.13"
-dependencies.celery = {extras = ["redis"], version = "^5.4.0"}
+dependencies.celery = { extras = ["redis"], version = "^5.4.0" }
 dependencies.psycopg = { extras = ["binary", "pool"], version = "^3.1.18" }
 dependencies.django-polymorphic = "^3.1.0"
 dependencies.coderedcms = { git = "https://github.com/dakotahorstman/coderedcms" }
