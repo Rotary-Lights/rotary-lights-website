@@ -1,7 +1,6 @@
 from pathlib import Path
 
-from rotary_lights_website.utils import env
-from rotary_lights_website.utils import load_setting
+from rotary_lights_website.utils import env, load_setting
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 APPS_DIR = BASE_DIR / "rotary_lights_website"
@@ -151,8 +150,11 @@ DJANGO_APPS = [
     "django.forms",
 ]
 
+GOOGLE_API_KEY = ""
+
 # Third-party apps
 THIRD_PARTY_APPS = [
+    "address",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -182,6 +184,7 @@ THIRD_PARTY_APPS = [
     "modelcluster",
     "taggit",
     "organizations",
+    "phonenumber_field",
 ]
 
 # Local apps
@@ -459,7 +462,9 @@ ACCOUNT_FORMS = {"signup": "rotary_lights_website.users.forms.UserSignupForm"}
 SOCIALACCOUNT_ADAPTER = "rotary_lights_website.users.adapters.SocialAccountAdapter"
 
 # https://docs.allauth.org/en/latest/socialaccount/configuration.html
-SOCIALACCOUNT_FORMS = {"signup": "rotary_lights_website.users.forms.UserSocialSignupForm"}
+SOCIALACCOUNT_FORMS = {
+    "signup": "rotary_lights_website.users.forms.UserSocialSignupForm",
+}
 
 # django-compressor
 # ----------------------------------------------------------------------
