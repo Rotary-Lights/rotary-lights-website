@@ -167,14 +167,16 @@ def load_setting(  # noqa: PLR0913
             )
         except ImproperlyConfigured as e:
             if last_exception and default == _NOT_PROVIDED:
-                message = f"Setting '{name}' was not found in the secrets or environment variables."
-                raise ImproperlyConfigured(message) from last_exception
+                raise ImproperlyConfigured(
+                    f"Setting '{name}' was not found in the secrets or environment variables."
+                ) from last_exception
             last_exception = e
 
     if default == _NOT_PROVIDED:
         if last_exception:
             raise last_exception
-        message = f"Setting '{name}' could not be found and no default value was provided."
-        raise ImproperlyConfigured(message)
+        raise ImproperlyConfigured(
+            f"Setting '{name}' could not be found and no default value was provided."
+        )
 
     return default
