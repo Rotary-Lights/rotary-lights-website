@@ -5,10 +5,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.urls import include
-from django.urls import path
+from django.urls import include, path
 from django.views import defaults as default_views
-from organizations.backends import invitation_backend
 from wagtail.documents import urls as wagtaildocs_urls
 
 urlpatterns = [
@@ -22,7 +20,6 @@ urlpatterns = [
     # User management
     path("users/", include("rotary_lights_website.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
-    path("invitations/", include(invitation_backend().get_urls())),
     # Media files
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
 ]

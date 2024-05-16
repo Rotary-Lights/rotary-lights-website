@@ -183,7 +183,6 @@ THIRD_PARTY_APPS = [
     "wagtailseo",
     "modelcluster",
     "taggit",
-    "organizations",
     "phonenumber_field",
 ]
 
