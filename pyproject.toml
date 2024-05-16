@@ -286,6 +286,8 @@ exclude = [
     "tests",
 ]
 dependencies.python = ">=3.12,<3.13"
+dependencies.django-address = "^0.2.8"
+dependencies.django-phonenumber-field = {extras = ["phonenumbers"], version = "^7.3.0"}
 dependencies.atpublic = "^4.1.0"
 dependencies.django-organizations = "^2.4.1"
 dependencies.celery = { extras = ["redis"], version = "^5.4.0" }
