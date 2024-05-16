@@ -39,9 +39,7 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
         """
         user = super().populate_user(request, sociallogin, data)
         if not user.name:
-            if name := data.get("name"):
-                user.name = name
-            elif first_name := data.get("first_name"):
+            if first_name := data.get("first_name"):
                 user.name = first_name
                 if last_name := data.get("last_name"):
                     user.name += f" {last_name}"
