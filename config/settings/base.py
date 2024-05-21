@@ -469,3 +469,9 @@ SOCIALACCOUNT_FORMS = {
 # ----------------------------------------------------------------------
 # https://django-compressor.readthedocs.io/en/latest/quickstart/#installation
 STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
+
+
+# django-phonenumber-field
+# ----------------------------------------------------------------------
+# https://django-phonenumber-field.readthedocs.io/en/latest/reference.html#phonenumber-default-region
+PHONENUMBER_DEFAULT_REGION = "US"
