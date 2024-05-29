@@ -70,9 +70,21 @@ class Organization(ClusterableModel):
 
     # Contact Properties
     address = AddressField(verbose_name=_("Mailing Address"))
-    primary_phone_number = PhoneNumberField(_("Primary Organization Phone Number"))
-    secondary_phone_number = PhoneNumberField(
-        _("Secondary Organization Phone Number"),
+    primary_contact_name = models.CharField(_("Primary Contact Name"), max_length=128)
+    primary_contact_email = models.EmailField(_("Primary Contact Email"))
+    primary_contact_phone_number = PhoneNumberField(_("Primary Contact Cell Number"))
+
+    secondary_contact_name = models.CharField(
+        _("Secondary Contact Name"),
+        max_length=128,
+        blank=True,
+    )
+    secondary_contact_email = models.EmailField(
+        _("Secondary Contact Email"),
+        blank=True,
+    )
+    secondary_contact_phone_number = PhoneNumberField(
+        _("Secondary Contact Cell Number"),
         blank=True,
     )
 

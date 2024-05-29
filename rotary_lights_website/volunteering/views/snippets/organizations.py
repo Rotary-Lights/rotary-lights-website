@@ -27,33 +27,42 @@ PANELS = [
                     FieldPanel("scheduled_deletion_date", read_only=True),
                 ]
             ),
+            FieldPanel("address"),
         ],
         heading=_("Basic Properties"),
     ),
     MultiFieldPanel(
         children=[
-            FieldPanel("address"),
             FieldRowPanel(
                 children=[
-                    FieldPanel("primary_phone_number"),
-                    FieldPanel("secondary_phone_number"),
+                    FieldPanel("primary_contact_name"),
+                    FieldPanel("primary_contact_email"),
+                    FieldPanel("primary_contact_phone_number"),
                 ]
             ),
         ],
-        heading=_("Contact Information"),
-        classname="collapsed",
+        heading=_("Primary Contact Information"),
     ),
     MultiFieldPanel(
         children=[
-            MultipleChooserPanel(
-                "owners",
-                chooser_field_name="owner",
-                label=_("Owners"),
-            ),
-            MultipleChooserPanel(
-                "members", chooser_field_name="volunteer_pk", label=_("Members")
+            FieldRowPanel(
+                children=[
+                    FieldPanel("secondary_contact_name"),
+                    FieldPanel("secondary_contact_email"),
+                    FieldPanel("secondary_contact_phone_number"),
+                ]
             ),
         ],
+        heading=_("Secondary Contact Information"),
+        classname="collapsed",
+    ),
+    MultiFieldPanel(
+        children=[MultipleChooserPanel("owners", chooser_field_name="owner")],
+        heading=_("Owners"),
+        classname="collapsed",
+    ),
+    MultiFieldPanel(
+        children=[MultipleChooserPanel("members", chooser_field_name="volunteer_pk")],
         heading=_("Members"),
         classname="collapsed",
     ),
