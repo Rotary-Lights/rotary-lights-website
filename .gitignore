@@ -279,3 +279,4 @@ rotary_lights_website/media/
 .env
 .envs/*
 !.envs/.local/
+certs/*
