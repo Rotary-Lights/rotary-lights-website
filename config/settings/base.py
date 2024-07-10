@@ -164,6 +164,7 @@ THIRD_PARTY_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     "django_bootstrap5",
+    "django_celery_beat",
     "django_sass",
     "polymorphic",
     "wagtail.contrib.forms",
