@@ -1,24 +1,23 @@
-# Stage 1: Build dependencies
-FROM python:3.12-slim-bullseye AS builder
+FROM python:3.12-slim-bullseye
 
 # Set environment variables to non-interactive
-ENV PYTHONDONTWRITEBYTECODE=1               \
-  PYTHONUNBUFFERED=1                      \
-  POETRY_VERSION=1.7.1                    \
-  APP_HOME=/app                           \
-  PATH="$PATH:/home/app-user/.local/bin"  \
+ENV PYTHONDONTWRITEBYTECODE=1 \
+  PYTHONUNBUFFERED=1 \
+  POETRY_VERSION=1.7.1 \
+  APP_HOME=/app \
+  PATH="$PATH:/home/app-user/.local/bin" \
   DEBIAN_FRONTEND=noninteractive
 
 # Set working directory
 WORKDIR ${APP_HOME}
 
 # Install system dependencies
-RUN apt-get update && apt-get install --no-install-recommends -y  \
-  build-essential                                                 \
-  python3-dev                                                     \
-  curl                                                            \
-  ca-certificates                                                 \
-  gnupg2                                                          \
+RUN apt-get update && apt-get install --no-install-recommends -y \
+  build-essential \
+  python3-dev \
+  curl \
+  ca-certificates \
+  gnupg2 \
   git
 
 # Install NodeJS and npm
@@ -26,7 +25,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_21.x | bash - \
   && apt-get install -y nodejs
 
 # Create non-root user
-RUN groupadd --gid 1000 app-user                                                    \
+RUN groupadd --gid 1000 app-user \
   && useradd --uid 1000 --gid app-user --shell /bin/bash --create-home app-user
 
 # Set owner of $APP_HOME
@@ -45,6 +44,9 @@ RUN curl -sSL https://install.python-poetry.org | python3 - --version ${POETRY_V
 COPY --chown=app-user:app-user pyproject.toml poetry.lock ./
 COPY --chown=app-user:app-user . .
 
+# Configure Poetry to create the virtual environment inside the project directory
+RUN poetry config virtualenvs.in-project true
+
 # Install frontend dependencies
 RUN npm install --global gulp-cli \
   && npm install
@@ -52,39 +54,8 @@ RUN npm install --global gulp-cli \
 # Install Python dependencies including dev dependencies
 RUN poetry self add "poetry-dynamic-versioning[plugin]" \
   && poetry dynamic-versioning enable \
+  && poetry add gunicorn \
   && poetry install --without dev
-
-# Stage 2: Final image
-FROM python:3.12-slim-bullseye
-
-# Set environment variables to non-interactive
-ENV PYTHONDONTWRITEBYTECODE=1               \
-  PYTHONUNBUFFERED=1                      \
-  APP_HOME=/app                           \
-  DEBIAN_FRONTEND=noninteractive
-
-# Set working directory
-WORKDIR ${APP_HOME}
-
-# Install system dependencies
-RUN apt-get update && apt-get install --no-install-recommends -y  \
-  build-essential                                                 \
-  python3-dev                                                     \
-  curl                                                            \
-  ca-certificates                                                 \
-  gnupg2                                                          \
-  git
-
-# Create non-root user
-RUN groupadd --gid 1000 app-user                                                    \
-  && useradd --uid 1000 --gid app-user --shell /bin/bash --create-home app-user
-
-# Set owner of $APP_HOME
-RUN chown app-user:app-user ${APP_HOME}
-
-# Copy the relevant files from the builder stage
-COPY --from=builder /home/app-user/.local /home/app-user/.local
-COPY --from=builder /app /app
 
 # Set the entrypoint scripts with proper permissions
 COPY --chown=app-user:app-user ./compose/production/django/entrypoint /entrypoint
@@ -99,16 +70,8 @@ RUN chmod +x /start-celerybeat /start-flower /start-celeryworker
 # Ensure git trusts the project
 RUN git config --global --add safe.directory "*"
 
-# Remove unnecessary dependencies to reduce image size
-RUN apt-get remove --purge -y \
-  build-essential \
-  python3-dev \
-  && apt-get autoremove -y \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* /usr/share/man/man1/node.1 /usr/share/man/man1/npm.1 /usr/local/lib/node_modules /usr/lib/node_modules /usr/bin/npm /usr/bin/npx
-
-# Switch to non-root user
-USER app-user
+# Ensure Poetry and virtual environment are in the PATH
+ENV PATH="/home/app-user/.local/bin:/app/.venv/bin:$PATH"
 
 ENTRYPOINT ["/entrypoint"]
 CMD ["/start"]

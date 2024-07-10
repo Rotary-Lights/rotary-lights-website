@@ -212,7 +212,6 @@ django-extensions = "^3.2.3"
 daphne = "^4.1.0"
 werkzeug = { extras = ["watchdog"], version = "^3.0.1" }
 ipdb = "^0.13.13"
-psycopg = { extras = ["binary", "pool"], version = "^3.1.18" }
 watchfiles = "^0.21.0"
 sphinx = "^7.2.6"
 furo = "^2024.1.29"
