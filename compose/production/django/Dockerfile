@@ -1,96 +1,114 @@
+# Stage 1: Build dependencies
+FROM python:3.12-slim-bullseye AS builder
 
-# define an alias for the specific python version used in this file.
-FROM docker.io/python:3.12.3-slim-bookworm as python
+# Set environment variables to non-interactive
+ENV PYTHONDONTWRITEBYTECODE=1               \
+  PYTHONUNBUFFERED=1                      \
+  POETRY_VERSION=1.7.1                    \
+  APP_HOME=/app                           \
+  PATH="$PATH:/home/app-user/.local/bin"  \
+  DEBIAN_FRONTEND=noninteractive
 
-# Python build stage
-FROM python as python-build-stage
-
-ARG BUILD_ENVIRONMENT=production
-
-# Install apt packages
-RUN apt-get update && apt-get install --no-install-recommends -y \
-  # dependencies for building Python packages
-  build-essential \
-  # psycopg dependencies
-  libpq-dev
-
-# Requirements are installed here to ensure they will be cached.
-COPY ./requirements .
-
-# Create Python Dependency and Sub-Dependency Wheels.
-RUN pip wheel --wheel-dir /usr/src/app/wheels  \
-  -r ${BUILD_ENVIRONMENT}.txt
-
-
-# Python 'run' stage
-FROM python as python-run-stage
-
-ARG BUILD_ENVIRONMENT=production
-ARG APP_HOME=/app
-
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV BUILD_ENV ${BUILD_ENVIRONMENT}
-
+# Set working directory
 WORKDIR ${APP_HOME}
 
-RUN addgroup --system django \
-    && adduser --system --ingroup django django
+# Install system dependencies
+RUN apt-get update && apt-get install --no-install-recommends -y  \
+  build-essential                                                 \
+  python3-dev                                                     \
+  curl                                                            \
+  ca-certificates                                                 \
+  gnupg2                                                          \
+  git
 
+# Install NodeJS and npm
+RUN curl -fsSL https://deb.nodesource.com/setup_21.x | bash - \
+  && apt-get install -y nodejs
 
-# Install required system dependencies
-RUN apt-get update && apt-get install --no-install-recommends -y \
-  # psycopg dependencies
-  libpq-dev \
-  # Translations dependencies
-  gettext \
-  # cleaning up unused files
-  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-  && rm -rf /var/lib/apt/lists/*
+# Create non-root user
+RUN groupadd --gid 1000 app-user                                                    \
+  && useradd --uid 1000 --gid app-user --shell /bin/bash --create-home app-user
 
-# All absolute dir copies ignore workdir instruction. All relative dir copies are wrt to the workdir instruction
-# copy python dependency wheels from python-build-stage
-COPY --from=python-build-stage /usr/src/app/wheels  /wheels/
+# Set owner of $APP_HOME
+RUN chown app-user:app-user ${APP_HOME}
 
-# use wheels to install python dependencies
-RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
-  && rm -rf /wheels/
+# For npm:
+RUN chmod 777 /usr/bin /usr/local/lib /usr/lib/node_modules /usr/share/man/man1
 
+# Switch to non-root user
+USER app-user
 
-COPY --chown=django:django ./compose/production/django/entrypoint /entrypoint
-RUN sed -i 's/\r$//g' /entrypoint
-RUN chmod +x /entrypoint
+# Install poetry for the non-root user
+RUN curl -sSL https://install.python-poetry.org | python3 - --version ${POETRY_VERSION}
 
+# Copy application code and poetry files
+COPY --chown=app-user:app-user pyproject.toml poetry.lock ./
+COPY --chown=app-user:app-user . .
 
-COPY --chown=django:django ./compose/production/django/start /start
-RUN sed -i 's/\r$//g' /start
-RUN chmod +x /start
-COPY --chown=django:django ./compose/production/django/celery/worker/start /start-celeryworker
-RUN sed -i 's/\r$//g' /start-celeryworker
-RUN chmod +x /start-celeryworker
+# Install frontend dependencies
+RUN npm install --global gulp-cli \
+  && npm install
 
+# Install Python dependencies including dev dependencies
+RUN poetry self add "poetry-dynamic-versioning[plugin]" \
+  && poetry dynamic-versioning enable \
+  && poetry install --without dev
 
-COPY --chown=django:django ./compose/production/django/celery/beat/start /start-celerybeat
-RUN sed -i 's/\r$//g' /start-celerybeat
-RUN chmod +x /start-celerybeat
+# Stage 2: Final image
+FROM python:3.12-slim-bullseye
 
+# Set environment variables to non-interactive
+ENV PYTHONDONTWRITEBYTECODE=1               \
+  PYTHONUNBUFFERED=1                      \
+  APP_HOME=/app                           \
+  DEBIAN_FRONTEND=noninteractive
 
-COPY --chown=django:django ./compose/production/django/celery/flower/start /start-flower
-RUN sed -i 's/\r$//g' /start-flower
-RUN chmod +x /start-flower
+# Set working directory
+WORKDIR ${APP_HOME}
 
+# Install system dependencies
+RUN apt-get update && apt-get install --no-install-recommends -y  \
+  build-essential                                                 \
+  python3-dev                                                     \
+  curl                                                            \
+  ca-certificates                                                 \
+  gnupg2                                                          \
+  git
 
-# copy application code to WORKDIR
-COPY --chown=django:django . ${APP_HOME}
+# Create non-root user
+RUN groupadd --gid 1000 app-user                                                    \
+  && useradd --uid 1000 --gid app-user --shell /bin/bash --create-home app-user
 
-# make django owner of the WORKDIR directory as well.
-RUN chown -R django:django ${APP_HOME}
+# Set owner of $APP_HOME
+RUN chown app-user:app-user ${APP_HOME}
 
-USER django
+# Copy the relevant files from the builder stage
+COPY --from=builder /home/app-user/.local /home/app-user/.local
+COPY --from=builder /app /app
 
-RUN DATABASE_URL="" \
-  CELERY_BROKER_URL="" \
-  DJANGO_SETTINGS_MODULE="config.settings.test" \
-  python manage.py compilemessages
+# Set the entrypoint scripts with proper permissions
+COPY --chown=app-user:app-user ./compose/production/django/entrypoint /entrypoint
+COPY --chown=app-user:app-user ./compose/production/django/start /start
+RUN chmod +x /entrypoint /start
+
+COPY --chown=app-user:app-user ./compose/production/django/celery/beat/start /start-celerybeat
+COPY --chown=app-user:app-user ./compose/production/django/celery/flower/start /start-flower
+COPY --chown=app-user:app-user ./compose/production/django/celery/worker/start /start-celeryworker
+RUN chmod +x /start-celerybeat /start-flower /start-celeryworker
+
+# Ensure git trusts the project
+RUN git config --global --add safe.directory "*"
+
+# Remove unnecessary dependencies to reduce image size
+RUN apt-get remove --purge -y \
+  build-essential \
+  python3-dev \
+  && apt-get autoremove -y \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* /usr/share/man/man1/node.1 /usr/share/man/man1/npm.1 /usr/local/lib/node_modules /usr/lib/node_modules /usr/bin/npm /usr/bin/npx
+
+# Switch to non-root user
+USER app-user
 
 ENTRYPOINT ["/entrypoint"]
+CMD ["/start"]
