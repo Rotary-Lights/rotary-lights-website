@@ -122,7 +122,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = load_setting(
 )
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#csrf-trusted-origins
-CSRF_TRUST_ORIGINS = ALLOWED_HOSTS
+CSRF_TRUSTED_ORIGINS = ["https://" + host for host in ALLOWED_HOSTS]
 
 # https://docs.djangoproject.com/en/5.0/ref/settings/#std-setting-DATA_UPLOAD_MAX_NUMBER_FIELDS
 DATA_UPLOAD_MAX_NUMBER_FIELDS = load_setting(
