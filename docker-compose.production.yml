@@ -1,0 +1,54 @@
+version: '3'
+
+volumes:
+  production_postgres_data: {}
+  production_postgres_data_backups: {}
+
+services:
+  django: &django
+    image: rotarylights/website:latest
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - ./.envs/.production/.django
+      - ./.envs/.production/.postgres
+    command: /start
+
+  postgres:
+    image: rotarylights/postgres:latest
+    volumes:
+      - production_postgres_data:/var/lib/postgresql/data
+      - production_postgres_data_backups:/backups
+    env_file:
+      - ./.envs/.production/.postgres
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    depends_on:
+      - django
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - /etc/nginx/certs:/etc/nginx/certs:ro
+
+  redis:
+    image: redis:6
+
+  celeryworker:
+    <<: *django
+    image: rotarylights/celeryworker:latest
+    command: /start-celeryworker
+
+  celerybeat:
+    <<: *django
+    image: rotarylights/celerybeat:latest
+    command: /start-celerybeat
+
+  flower:
+    <<: *django
+    image: rotarylights/flower:latest
+    command: /start-flower
