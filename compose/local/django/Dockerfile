@@ -11,8 +11,8 @@ ENV PYTHONDONTWRITEBYTECODE=1               \
 # Set working directory
 WORKDIR ${APP_HOME}
 
-RUN apt-get update && apt-get install --no-install-recommends -y    \
-  # Install system dependencies                                   \
+# Install system dependencies
+RUN apt-get update && apt-get install --no-install-recommends -y  \
   build-essential                                                 \
   python3-dev                                                     \
   gnupg2                                                          \
@@ -23,18 +23,29 @@ RUN apt-get update && apt-get install --no-install-recommends -y    \
   nano                                                            \
   ssh                                                             \
   curl                                                            \
-  ca-certificates                                                 \
-  # Install docker
-  && curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -                                                  \
-  && echo "deb [arch=amd64] https://download.docker.com/linux/debian bullseye stable" > /etc/apt/sources.list.d/docker.list   \
-  && apt-get update                                                                                                           \
-  && apt-get install --no-install-recommends -y docker-ce docker-ce-cli containerd.io                                         \
-  # Install NodeJS/npm                                                                                                        \
-  && curl -fsSL https://deb.nodesource.com/setup_21.x | sudo -E bash -                                                        \
-  && apt-get install -y nodejs                                                                                                \
-  # Clean up unused files to reduce image size                                                                                \
-  && apt-get clean                                                                                                            \
+  ca-certificates
+
+# Add Docker's official GPG key and repository
+RUN install -m 0755 -d /etc/apt/keyrings                         \
+  && curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc \
+  && chmod a+r /etc/apt/keyrings/docker.asc                       \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo $VERSION_CODENAME) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
+  && apt-get update                                               \
+  && apt-get install -y                                           \
+     docker-ce                                                    \
+     docker-ce-cli                                                \
+     containerd.io                                                \
+     docker-buildx-plugin                                         \
+     docker-compose-plugin
+
+# Install NodeJS and npm
+RUN curl -fsSL https://deb.nodesource.com/setup_21.x | sudo -E bash - \
+  && apt-get install -y nodejs
+
+# Clean up unused files to reduce image size
+RUN apt-get clean                                                \
   && rm -rf /var/lib/apt/lists/*
+
 
 # Create non-root user
 RUN groupadd --gid 1000 dev-user                                                    \
