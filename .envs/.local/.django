@@ -8,6 +8,9 @@ WAGTAIL_ADMIN_URL=admin/
 USE_DOCKER=yes
 IPYTHONDIR=/app/.ipython
 
+VIRTUAL_HOST=rotarylights.local
+VIRTUAL_PORT=8000
+
 # Redis
 # ------------------------------------------------------------------------------
 REDIS_URL=redis://redis:6379/0
