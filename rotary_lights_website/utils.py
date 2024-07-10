@@ -54,7 +54,7 @@ def load_secret_by_name(
         # type requested.
         with filename.open() as handle:
             data = handle.read().strip()
-            if primitive_type == bool:
+            if primitive_type is bool:
                 return ast.literal_eval(data)
             return primitive_type(data)
     except FileNotFoundError as exc:
@@ -94,7 +94,7 @@ def load_env_variable_by_name(
     try:
         # Search the environment variables for a variable by `name`.
         data = env.str(name)
-        if primitive_type == bool:
+        if primitive_type is bool:
             return ast.literal_eval(data)
         return primitive_type(data)
     except ImproperlyConfigured:
