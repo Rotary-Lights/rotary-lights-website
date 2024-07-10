@@ -29,7 +29,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y    \
   && echo "deb [arch=amd64] https://download.docker.com/linux/debian bullseye stable" > /etc/apt/sources.list.d/docker.list   \
   && apt-get update                                                                                                           \
   && apt-get install --no-install-recommends -y docker-ce docker-ce-cli containerd.io                                         \
-  # Install NodeJS/npm
+  # Install NodeJS/npm                                                                                                        \
   && curl -fsSL https://deb.nodesource.com/setup_21.x | sudo -E bash -                                                        \
   && apt-get install -y nodejs                                                                                                \
   # Clean up unused files to reduce image size                                                                                \
@@ -38,9 +38,9 @@ RUN apt-get update && apt-get install --no-install-recommends -y    \
 
 # Create non-root user
 RUN groupadd --gid 1000 dev-user                                                    \
-  && useradd --uid 1000 --gid dev-user --shell /bin/bash --create-home dev-user   \
-  && echo "dev-user ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/dev-user            \
-  && chmod 0440 /etc/sudoers.d/dev-user                                           \
+  && useradd --uid 1000 --gid dev-user --shell /bin/bash --create-home dev-user     \
+  && echo "dev-user ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/dev-user              \
+  && chmod 0440 /etc/sudoers.d/dev-user                                             \
   && usermod -aG docker dev-user
 
 # Set owner of $APP_HOME
@@ -68,6 +68,11 @@ COPY --chown=dev-user:dev-user . .
 COPY --chown=dev-user:dev-user ./compose/local/django/entrypoint   /entrypoint
 COPY --chown=dev-user:dev-user ./compose/local/django/start        /start
 RUN chmod +x /entrypoint /start
+
+COPY --chown=dev-user:dev-user ./compose/local/django/celery/beat/start        /start-celerybeat
+COPY --chown=dev-user:dev-user ./compose/local/django/celery/flower/start      /start-flower
+COPY --chown=dev-user:dev-user ./compose/local/django/celery/worker/start      /start-celeryworker
+RUN chmod +x /start-celerybeat /start-flower /start-celeryworker
 
 # Ensure git trusts the project
 RUN git config --global --add safe.directory "*"
