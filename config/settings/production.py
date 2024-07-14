@@ -1,8 +1,6 @@
 # ruff: noqa: E501
 from .base import *  # noqa: F403
-from .base import DATABASES
-from .base import INSTALLED_APPS
-from .base import env
+from .base import DATABASES, env
 
 # GENERAL
 # ------------------------------------------------------------------------------
@@ -94,7 +92,7 @@ EMAIL_SUBJECT_PREFIX = env(
 )
 
 # ADMIN
-# ------------------------------------------------------------------------------
+# --------------------------------------ec2-18-222-200-34.us-east-2.compute.amazonaws----------------------------------------
 # Django Admin URL regex.
 ADMIN_URL = env("DJANGO_ADMIN_URL")
 
@@ -115,19 +113,19 @@ ADMIN_URL = env("DJANGO_ADMIN_URL")
 # django-compressor
 # ------------------------------------------------------------------------------
 # https://django-compressor.readthedocs.io/en/latest/settings/#django.conf.settings.COMPRESS_ENABLED
-COMPRESS_ENABLED = env.bool("COMPRESS_ENABLED", default=True)
+# COMPRESS_ENABLED = env.bool("COMPRESS_ENABLED", default=True)
 # https://django-compressor.readthedocs.io/en/latest/settings/#django.conf.settings.COMPRESS_STORAGE
 # COMPRESS_STORAGE = STORAGES["staticfiles"]["BACKEND"]
 # https://django-compressor.readthedocs.io/en/latest/settings/#django.conf.settings.COMPRESS_URL
-COMPRESS_URL = STATIC_URL
+# COMPRESS_URL = STATIC_URL
 # https://django-compressor.readthedocs.io/en/latest/settings/#django.conf.settings.COMPRESS_FILTERS
-COMPRESS_FILTERS = {
-    "css": [
-        "compressor.filters.css_default.CssAbsoluteFilter",
-        "compressor.filters.cssmin.rCSSMinFilter",
-    ],
-    "js": ["compressor.filters.jsmin.JSMinFilter"],
-}
+# COMPRESS_FILTERS = {
+#     "css": [
+#         "compressor.filters.css_default.CssAbsoluteFilter",
+#         "compressor.filters.cssmin.rCSSMinFilter",
+#     ],
+#     "js": ["compressor.filters.jsmin.JSMinFilter"],
+# }
 # Collectfast
 # ------------------------------------------------------------------------------
 # https://github.com/antonagestam/collectfast#installation

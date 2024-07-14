@@ -3,6 +3,7 @@ version: '3'
 volumes:
   production_postgres_data: {}
   production_postgres_data_backups: {}
+  production_django_staticfiles: {}
 
 services:
   django: &django
@@ -13,7 +14,10 @@ services:
     env_file:
       - ./.envs/.production/.django
       - ./.envs/.production/.postgres
+    volumes:
+      - production_django_staticfiles:/app/staticfiles:rw
     command: /start
+    restart: always
 
   postgres:
     image: rotarylights/postgres:latest
@@ -22,6 +26,7 @@ services:
       - production_postgres_data_backups:/backups
     env_file:
       - ./.envs/.production/.postgres
+    restart: always
 
   nginx-proxy:
     image: jwilder/nginx-proxy
@@ -33,10 +38,14 @@ services:
       - "443:443"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - /etc/nginx/certs:/etc/nginx/certs:ro
+      - ./certs:/etc/nginx/certs:ro
+      - ./compose/production/nginx/vhost.d:/etc/nginx/vhost.d:ro
+      - production_django_staticfiles:/staticfiles:ro
+    restart: always
 
   redis:
     image: redis:6
+    restart: always
 
   celeryworker:
     <<: *django

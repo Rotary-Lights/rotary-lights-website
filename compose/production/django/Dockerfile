@@ -34,6 +34,10 @@ RUN chown app-user:app-user ${APP_HOME}
 # For npm:
 RUN chmod 777 /usr/bin /usr/local/lib /usr/lib/node_modules /usr/share/man/man1
 
+# Clean up unused files
+RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+  && rm -rf /var/lib/apt/lists/*
+
 # Switch to non-root user
 USER app-user
 
@@ -54,7 +58,6 @@ RUN npm install --global gulp-cli \
 # Install Python dependencies including dev dependencies
 RUN poetry self add "poetry-dynamic-versioning[plugin]" \
   && poetry dynamic-versioning enable \
-  && poetry add gunicorn \
   && poetry install --without dev
 
 # Set the entrypoint scripts with proper permissions
@@ -72,6 +75,9 @@ RUN git config --global --add safe.directory "*"
 
 # Ensure Poetry and virtual environment are in the PATH
 ENV PATH="/home/app-user/.local/bin:/app/.venv/bin:$PATH"
+
+# Ensure the staticfiles directory is available and accessible.
+RUN mkdir -p /app/staticfiles && chown -R app-user:app-user /app/staticfiles
 
 ENTRYPOINT ["/entrypoint"]
 CMD ["/start"]
