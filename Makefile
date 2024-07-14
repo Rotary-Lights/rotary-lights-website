@@ -10,9 +10,6 @@ LOCAL_IMAGES = rotary_lights_website_local_django \
                rotary_lights_website_production_postgres
 
 PRODUCTION_IMAGES = rotarylights/website \
-                    rotarylights/celeryworker \
-                    rotarylights/celerybeat \
-                    rotarylights/flower \
                     rotarylights/postgres
 
 # Default target
@@ -25,23 +22,11 @@ build_local:
 	$(DOCKER_COMPOSE_LOCAL) build
 
 .PHONY: build_production
-build_production: build_rotarylights_website build_celeryworker build_celerybeat build_flower build_postgres
+build_production: build_rotarylights_website build_postgres
 
 .PHONY: build_rotarylights_website
 build_rotarylights_website:
 	docker build -t rotarylights/website:latest -f compose/production/django/Dockerfile .
-
-.PHONY: build_celeryworker
-build_celeryworker:
-	docker build -t rotarylights/celeryworker:latest -f compose/production/django/Dockerfile .
-
-.PHONY: build_celerybeat
-build_celerybeat:
-	docker build -t rotarylights/celerybeat:latest -f compose/production/django/Dockerfile .
-
-.PHONY: build_flower
-build_flower:
-	docker build -t rotarylights/flower:latest -f compose/production/django/Dockerfile .
 
 .PHONY: build_postgres
 build_postgres:
