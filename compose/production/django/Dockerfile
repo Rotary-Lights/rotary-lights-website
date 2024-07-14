@@ -76,8 +76,9 @@ RUN git config --global --add safe.directory "*"
 # Ensure Poetry and virtual environment are in the PATH
 ENV PATH="/home/app-user/.local/bin:/app/.venv/bin:$PATH"
 
-# Ensure the staticfiles directory is available and accessible.
-RUN mkdir -p /app/staticfiles && chown -R app-user:app-user /app/staticfiles
+# Ensure the staticfiles and media directories are available and accessible.
+RUN mkdir -p /app/staticfiles && chmod -R 777 /app/staticfiles
+RUN mkdir -p /app/media && chmod -R 777 /app/media && mkdir /app/media/original_images
 
 ENTRYPOINT ["/entrypoint"]
 CMD ["/start"]

@@ -4,6 +4,7 @@ volumes:
   production_postgres_data: {}
   production_postgres_data_backups: {}
   production_django_staticfiles: {}
+  production_django_mediafiles: {}
 
 services:
   django: &django
@@ -16,6 +17,7 @@ services:
       - ./.envs/.production/.postgres
     volumes:
       - production_django_staticfiles:/app/staticfiles:rw
+      - production_django_mediafiles:/app/media:rw
     command: /start
     restart: always
 
@@ -41,6 +43,7 @@ services:
       - ./certs:/etc/nginx/certs:ro
       - ./compose/production/nginx/vhost.d:/etc/nginx/vhost.d:ro
       - production_django_staticfiles:/staticfiles:ro
+      - production_django_mediafiles:/media:ro
     restart: always
 
   redis:
@@ -49,15 +52,15 @@ services:
 
   celeryworker:
     <<: *django
-    image: rotarylights/celeryworker:latest
+    image: rotarylights/website:latest
     command: /start-celeryworker
 
   celerybeat:
     <<: *django
-    image: rotarylights/celerybeat:latest
+    image: rotarylights/website:latest
     command: /start-celerybeat
 
   flower:
     <<: *django
-    image: rotarylights/flower:latest
+    image: rotarylights/website:latest
     command: /start-flower

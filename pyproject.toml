@@ -165,6 +165,7 @@ exclude = [
     "tests",
 ]
 dependencies.python = ">=3.12,<3.13"
+dependencies.setuptools = "^70.3.0"
 dependencies.flower = "^2.0.1"
 dependencies.django-celery-beat = "^2.6.0"
 dependencies.django-address = "^0.2.8"
