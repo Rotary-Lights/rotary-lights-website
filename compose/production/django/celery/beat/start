@@ -4,6 +4,7 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
+./wait-for-it.sh -t 120 django:8000 -- echo "Website is ready, spooling celerybeat"
 
 exec poetry run celery \
     -A config.celery_app beat \

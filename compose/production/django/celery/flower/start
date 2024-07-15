@@ -3,6 +3,7 @@
 set -o errexit
 set -o nounset
 
+./wait-for-it.sh -t 120 django:8000 -- echo "Website is ready, spooling celery flower"
 
 exec poetry run celery \
     -A config.celery_app \
