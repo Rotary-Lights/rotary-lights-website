@@ -1,7 +1,12 @@
+from address.forms import AddressField
 from allauth.account.forms import SignupForm
 from allauth.socialaccount.forms import SignupForm as SocialSignupForm
+from django import forms
 from django.contrib.auth import forms as admin_forms
 from django.utils.translation import gettext_lazy as _
+from phonenumber_field.formfields import PhoneNumberField
+
+from rotary_lights_website.volunteering.models.volunteers import Volunteer
 
 from .models import User
 
@@ -30,6 +35,22 @@ class UserSignupForm(SignupForm):
     Default fields will be added automatically.
     Check UserSocialSignupForm for accounts created from social.
     """
+
+    first_name = forms.CharField(max_length=150)
+    last_name = forms.CharField(max_length=150)
+    address = AddressField()
+    primary_phone_number = PhoneNumberField(region="US")
+    secondary_phone_number = PhoneNumberField(region="US")
+
+    def save(self, request):
+        user = super().save(request)
+        Volunteer.objects.create(
+            user=user,
+            address=request.POST["address"],
+            primary_phone_number=request.POST["primary_phone_number"],
+            secondary_phone_number=request.POST["secondary_phone_number"],
+        )
+        return user
 
 
 class UserSocialSignupForm(SocialSignupForm):

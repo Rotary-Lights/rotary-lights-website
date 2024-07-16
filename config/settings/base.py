@@ -155,6 +155,7 @@ GOOGLE_API_KEY = ""
 # Third-party apps
 THIRD_PARTY_APPS = [
     "address",
+    "allauth_ui",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -185,6 +186,8 @@ THIRD_PARTY_APPS = [
     "modelcluster",
     "taggit",
     "phonenumber_field",
+    "widget_tweaks",
+    "slippers",
 ]
 
 # Local apps
@@ -219,7 +222,7 @@ AUTHENTICATION_BACKENDS = [
 AUTH_USER_MODEL = "users.User"
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
-LOGIN_REDIRECT_URL = "users:redirect"
+LOGIN_REDIRECT_URL = "/admin/account/"
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
 LOGIN_URL = "account_login"
@@ -288,7 +291,7 @@ STATICFILES_FINDERS = [
 # Media
 # ----------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#media-root
-MEDIA_ROOT = str(APPS_DIR / "media")
+MEDIA_ROOT = str(BASE_DIR / "media")
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#media-url
 MEDIA_URL = "/media/"
@@ -344,6 +347,7 @@ EMAIL_BACKEND = load_setting(
     str,
     default="django.core.mail.backends.smtp.EmailBackend",
 )
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-timeout
 EMAIL_TIMEOUT = 5
 
@@ -423,7 +427,7 @@ CELERY_TASK_SEND_SENT_EVENT = True
 # Wagtail
 # ----------------------------------------------------------------------
 # https://docs.wagtail.org/en/stable/reference/settings.html#wagtail-site-name
-WAGTAIL_SITE_NAME = "Rotary Lights Website"
+WAGTAIL_SITE_NAME = "Rotary Lights of La Crosse"
 
 # https://django-taggit.readthedocs.io/en/latest/getting_started.html
 TAGGIT_CASE_INSENSITIVE = True
@@ -476,3 +480,9 @@ STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
 # ----------------------------------------------------------------------
 # https://django-phonenumber-field.readthedocs.io/en/latest/reference.html#phonenumber-default-region
 PHONENUMBER_DEFAULT_REGION = "US"
+
+
+# django-allauth-ui
+# ----------------------------------------------------------------------
+# https://github.com/danihodovic/django-allauth-ui
+ALLAUTH_UI_THEME = "light"
