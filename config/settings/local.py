@@ -14,6 +14,21 @@ CACHES = {
 
 # Email
 # ----------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
+DEFAULT_FROM_EMAIL = load_setting(
+    "DJANGO_DEFAULT_FROM_EMAIL",
+    default="Rotary Lights <noreply@example.com>",
+)
+
+# https://docs.djangoproject.com/en/dev/ref/settings/#server-email
+SERVER_EMAIL = load_setting("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
+
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-subject-prefix
+EMAIL_SUBJECT_PREFIX = load_setting(
+    "DJANGO_EMAIL_SUBJECT_PREFIX",
+    default="[Rotary Lights] ",
+)
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-host
 EMAIL_HOST = load_setting("EMAIL_HOST", str, default="mailpit")
 
