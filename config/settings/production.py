@@ -1,4 +1,6 @@
 # ruff: noqa: E501
+from rotary_lights_website.utils import load_setting
+
 from .base import *  # noqa: F403
 from .base import DATABASES, env
 
@@ -9,14 +11,14 @@ ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["rotarylights.org"])
 
 # DATABASES
 # ------------------------------------------------------------------------------
-DATABASES["default"]["CONN_MAX_AGE"] = env.int("CONN_MAX_AGE", default=60)
+DATABASES["default"]["CONN_MAX_AGE"] = load_setting("CONN_MAX_AGE", int, default=60)
 
 # CACHES
 # ------------------------------------------------------------------------------
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": env("REDIS_URL"),
+        "LOCATION": load_setting("REDIS_URL"),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             # Mimicing memcache behavior.
@@ -25,6 +27,12 @@ CACHES = {
         },
     },
 }
+
+
+# Wagtail
+# ----------------------------------------------------------------------
+# https://docs.wagtail.org/en/stable/reference/settings.html#wagtailadmin-base-url
+WAGTAILADMIN_BASE_URL = load_setting("WAGTAILADMIN_BASE_URL")
 
 # # STORAGES
 # # ------------------------------------------------------------------------------
@@ -79,22 +87,24 @@ CACHES = {
 # EMAIL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
-DEFAULT_FROM_EMAIL = env(
+DEFAULT_FROM_EMAIL = load_setting(
     "DJANGO_DEFAULT_FROM_EMAIL",
     default="Rotary Lights Website <noreply@rotarylights.org>",
 )
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#server-email
-SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
+SERVER_EMAIL = load_setting("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-subject-prefix
-EMAIL_SUBJECT_PREFIX = env(
+EMAIL_SUBJECT_PREFIX = load_setting(
     "DJANGO_EMAIL_SUBJECT_PREFIX",
-    default="[Rotary Lights Website] ",
+    default="[Rotary Lights] ",
 )
 
 # ADMIN
-# --------------------------------------ec2-18-222-200-34.us-east-2.compute.amazonaws----------------------------------------
+# ------------------------------------------------------------------------------
 # Django Admin URL regex.
-ADMIN_URL = env("DJANGO_ADMIN_URL")
+ADMIN_URL = load_setting("DJANGO_ADMIN_URL")
 
 # Anymail
 # ------------------------------------------------------------------------------
@@ -174,7 +184,3 @@ LOGGING = {
         },
     },
 }
-
-
-# Your stuff...
-# ------------------------------------------------------------------------------
