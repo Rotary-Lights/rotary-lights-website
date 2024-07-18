@@ -5,9 +5,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.views import defaults as default_views
 from wagtail.documents import urls as wagtaildocs_urls
+
+from rotary_lights_website.users import views as user_views
 
 urlpatterns = [
     # Admin, use {% url 'admin:index' %}
@@ -58,5 +60,7 @@ urlpatterns += [
     # For anything not caught by a more specific rule above, hand over to
     # the page serving mechanism. This should be the last pattern in
     # the list:
+    re_path(r"^logout/$", user_views.logout, name="wagtailadmin_logout"),
+    re_path(r"^login/$", user_views.login, name="wagtailadmin_login"),
     path("", include(crx_urls)),
 ]
