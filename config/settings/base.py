@@ -227,6 +227,9 @@ LOGIN_REDIRECT_URL = "/admin/account/"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
 LOGIN_URL = "account_login"
 
+# https://docs.djangoproject.com/en/dev/ref/settings/#login-url
+LOGOUT_REDIRECT_URL = LOGIN_URL
+
 
 # Passwords
 # ----------------------------------------------------------------------
