@@ -1,3 +1,4 @@
+import re
 from typing import List
 
 from django import forms
@@ -25,6 +26,9 @@ from wagtail.snippets.views.snippets import (
     SnippetViewSet,
 )
 
+from rotary_lights_website.volunteering.models.organizations import (
+    OrganizationOwnersRelation,
+)
 from rotary_lights_website.volunteering.models.volunteers import Volunteer
 
 # Choosers
@@ -102,7 +106,24 @@ class VolunteerChooseView(
     CreationFormMixin,
     AbstractVolunteerChooseView,
 ):
-    pass
+    def get_object_list(self):
+        queryset = super().get_object_list()
+        referer = self.request.headers.get("referer", "")
+
+        if "add" in referer and not self.request.user.is_staff:
+            # Filter out the current self.request.user
+            queryset = queryset.exclude(user=self.request.user)
+        else:
+            # Filter out owners (through OrganizationOwnersRelation)
+            match = re.search(r"(\d+)\/?$", referer)
+            if match:
+                organization_id = int(match.group(1))
+                owner_ids = OrganizationOwnersRelation.objects.filter(
+                    organization_id=organization_id
+                ).values_list("owner_id", flat=True)
+                queryset = queryset.exclude(id__in=owner_ids)
+
+        return queryset
 
 
 class VolunteerChooseResultsView(
