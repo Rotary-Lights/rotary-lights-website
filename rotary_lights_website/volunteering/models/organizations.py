@@ -60,9 +60,9 @@ class Organization(ClusterableModel):
         blank=True,
     )
 
-    owners: Manager["Volunteer"]
+    owners: Manager["OrganizationOwnersRelation"]
     if TYPE_CHECKING:
-        owners: QuerySet["Volunteer"]
+        owners: QuerySet["OrganizationOwnersRelation"]
 
     members: Manager["Volunteer"]
     if TYPE_CHECKING:

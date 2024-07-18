@@ -1,3 +1,4 @@
+from django.forms import Media
 from django.utils.translation import gettext_lazy as _
 from wagtail.admin.panels import (
     FieldPanel,
@@ -5,7 +6,12 @@ from wagtail.admin.panels import (
     MultiFieldPanel,
     MultipleChooserPanel,
 )
-from wagtail.snippets.views.snippets import SnippetViewSet
+from wagtail.snippets.views.snippets import (
+    CreateView,
+    EditView,
+    IndexView,
+    SnippetViewSet,
+)
 
 from rotary_lights_website.volunteering.models.organizations import Organization
 
@@ -80,9 +86,63 @@ PANELS = [
 ]
 
 
+class OrganizationCreateView(CreateView):
+    model = Organization
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        if not self.request.user.is_staff:
+            ctx["media"] += Media(
+                js=["js/hide_owners.js", "js/disable_is_quarantined.js"]
+            )
+
+        return ctx
+
+    def post(self, request, *args, **kwargs):
+        # Insert the owner as the current user if user is not staff.
+        if not self.request.user.is_staff:
+            post = self.request.POST.copy()
+            self.request.POST = post
+
+        return super().post(request, *args, **kwargs)
+
+
+class OrganizationEditView(EditView):
+    model = Organization
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        if not self.request.user.is_staff:
+            ctx["media"] += Media(
+                js=["js/hide_owners.js", "js/disable_is_quarantined.js"]
+            )
+
+        return ctx
+
+    def post(self, request, *args, **kwargs):
+        # Insert the owner as the current user if user is not staff.
+        if not self.request.user.is_staff:
+            post = self.request.POST.copy()
+            self.request.POST = post
+
+        return super().post(request, *args, **kwargs)
+
+
+class OrganizationsIndexView(IndexView):
+    model = Organization
+
+    def get_queryset(self):
+        # Limit the organizations to those of the user.
+        queryset = super().get_queryset()
+        return queryset.filter(owners__owner__user=self.request.user)
+
+
 class OrganizationViewSet(SnippetViewSet):
     model = Organization
-    exclude_form_fields = []
+
+    add_view_class = OrganizationCreateView
+    edit_view_class = OrganizationEditView
+    index_view_class = OrganizationsIndexView
 
     icon = "group"
     menu_label = _("Organizations")
