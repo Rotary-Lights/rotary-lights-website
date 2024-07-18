@@ -1,3 +1,5 @@
+import re
+
 from django.forms import Media
 from django.utils.translation import gettext_lazy as _
 from wagtail.admin.panels import (
@@ -13,7 +15,11 @@ from wagtail.snippets.views.snippets import (
     SnippetViewSet,
 )
 
-from rotary_lights_website.volunteering.models.organizations import Organization
+from rotary_lights_website.volunteering.models.organizations import (
+    Organization,
+    OrganizationOwnersRelation,
+)
+from rotary_lights_website.volunteering.models.volunteers import Volunteer
 
 # ViewSets
 # ----------------------------------------------------------------------
@@ -106,6 +112,27 @@ class OrganizationCreateView(CreateView):
 
         return super().post(request, *args, **kwargs)
 
+    def save_instance(self):
+        instance: Organization = super().save_instance()
+
+        if not self.request.user.is_staff:
+            OrganizationOwnersRelation.objects.create(
+                organization=instance,
+                owner=Volunteer.objects.get(user=self.request.user),
+            )
+        else:
+            for post_key, post_value in self.request.POST.items():
+                if "owners" in post_key:
+                    match = re.search(r"(\d+)-owner", post_key)
+                    if match:
+                        owner_id = int(post_value)
+                        OrganizationOwnersRelation.objects.get_or_create(
+                            organization=instance,
+                            owner=Volunteer.objects.get(user__pk=owner_id),
+                        )
+
+        return instance
+
 
 class OrganizationEditView(EditView):
     model = Organization
@@ -126,6 +153,21 @@ class OrganizationEditView(EditView):
             self.request.POST = post
 
         return super().post(request, *args, **kwargs)
+
+    def save_instance(self):
+        instance: Organization = super().save_instance()
+
+        for post_key, post_value in self.request.POST.items():
+            if "owners" in post_key:
+                match = re.search(r"(\d+)-owner", post_key)
+                if match:
+                    owner_id = int(post_value)
+                    OrganizationOwnersRelation.objects.get_or_create(
+                        organization=instance,
+                        owner=Volunteer.objects.get(user__pk=owner_id),
+                    )
+
+        return instance
 
 
 class OrganizationsIndexView(IndexView):
