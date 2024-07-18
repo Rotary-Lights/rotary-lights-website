@@ -1,9 +1,11 @@
-from coderedcms.models import CoderedArticleIndexPage
-from coderedcms.models import CoderedArticlePage
-from coderedcms.models import CoderedEventIndexPage
-from coderedcms.models import CoderedEventOccurrence
-from coderedcms.models import CoderedEventPage
-from coderedcms.models import CoderedWebPage
+from coderedcms.models import (
+    CoderedArticleIndexPage,
+    CoderedArticlePage,
+    CoderedEventIndexPage,
+    CoderedEventOccurrence,
+    CoderedEventPage,
+    CoderedWebPage,
+)
 from modelcluster.fields import ParentalKey
 
 
@@ -14,7 +16,7 @@ class RotaryWebPage(CoderedWebPage):
         verbose_name = "Web Page"
         verbose_name_plural = "Web Pages"
 
-    template = "coderedcms/pages/web_page.html"
+    template = "coderedcms/pages/web_page_notitle.html"
 
 
 class RotaryArticleIndexPage(CoderedArticleIndexPage):
