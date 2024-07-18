@@ -3,12 +3,12 @@ from allauth.account.forms import SignupForm
 from allauth.socialaccount.forms import SignupForm as SocialSignupForm
 from django import forms
 from django.contrib.auth import forms as admin_forms
+from django.core.exceptions import MultipleObjectsReturned
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.formfields import PhoneNumberField
 
+from rotary_lights_website.users.models import User
 from rotary_lights_website.volunteering.models.volunteers import Volunteer
-
-from .models import User
 
 
 class UserAdminChangeForm(admin_forms.UserChangeForm):
@@ -41,6 +41,13 @@ class UserSignupForm(SignupForm):
     address = AddressField()
     primary_phone_number = PhoneNumberField(region="US")
     secondary_phone_number = PhoneNumberField(region="US")
+
+    def full_clean(self):
+        try:
+            return super().full_clean()
+        except MultipleObjectsReturned as exc:
+            if "Address" in str(exc):
+                return
 
     def save(self, request):
         user = super().save(request)
