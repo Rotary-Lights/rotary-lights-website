@@ -10,6 +10,5 @@ class VolunteeringConfig(AppConfig):
     def ready(self) -> None:
         with suppress(ImportError):
             import rotary_lights_website.users.signals  # noqa: F401
-        from rotary_lights_website.volunteering import forms  # noqa: F401
 
         return super().ready()
