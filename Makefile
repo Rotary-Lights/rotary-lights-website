@@ -16,6 +16,10 @@ PRODUCTION_IMAGES = rotarylights/website \
 .PHONY: all
 all: build_local build_production push_production
 
+# Default production target
+.PHONY: production
+production: build_production push_production
+
 # Build targets
 .PHONY: build_local
 build_local:
