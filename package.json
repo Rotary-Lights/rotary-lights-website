@@ -4,6 +4,7 @@
     "chart.js": "^4.4.2",
     "gulp-cli": "^2.3.0",
     "merge-stream": "^2.0.0",
+    "mjml": "^4.15.3",
     "npm": "^10.5.0"
   },
   "scripts": {
