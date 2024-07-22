@@ -1132,6 +1132,27 @@ files = [
 Django = ">=4.2"
 
 [[package]]
+name = "django-mjml"
+version = "1.2"
+description = "Use MJML in Django templates"
+optional = false
+python-versions = ">=3.6"
+files = []
+develop = false
+
+[package.dependencies]
+django = ">=2.2,<5.1"
+
+[package.extras]
+requests = ["requests (>=2.24)"]
+
+[package.source]
+type = "git"
+url = "https://github.com/dakotahorstman/django-mjml"
+reference = "HEAD"
+resolved_reference = "9789ec1b71019f6e132c19f1e00d061a122f7d06"
+
+[[package]]
 name = "django-model-utils"
 version = "4.5.1"
 description = "Django model mixins and utilities"
@@ -3729,6 +3750,26 @@ docs = ["Sphinx (>=1.5.2)", "myst-parser (==2.0.0)", "pyenchant (>=3.1.1,<4)", "
 testing = ["Jinja2 (>=3.0,<3.2)", "azure-mgmt-cdn (>=12.0,<13.0)", "azure-mgmt-frontdoor (>=1.0,<1.1)", "boto3 (>=1.28,<2)", "coverage (>=3.7.0)", "curlylint (==0.13.1)", "django-pattern-library (>=0.7)", "djhtml (==3.0.6)", "doc8 (==0.8.1)", "factory-boy (>=3.2)", "freezegun (>=0.3.8)", "polib (>=1.1,<2.0)", "python-dateutil (>=2.7)", "pytz (>=2014.7)", "ruff (==0.1.5)", "semgrep (==1.40.0)", "tblib (>=2.0,<3.0)"]
 
 [[package]]
+name = "wagtail-birdsong"
+version = "2.0.0"
+description = "Create and send email campaigns from Wagtail"
+optional = false
+python-versions = "*"
+files = []
+develop = false
+
+[package.dependencies]
+django-mjml = "*"
+wagtail = ">=5.2"
+wagtail-modeladmin = "*"
+
+[package.source]
+type = "git"
+url = "https://github.com/dakotahorstman/wagtail-birdsong"
+reference = "HEAD"
+resolved_reference = "03bad59238e8829407f2c9d71889224ca3b38aa2"
+
+[[package]]
 name = "wagtail-cache"
 version = "2.4.0"
 description = "A simple page cache for Wagtail based on the Django cache middleware."
@@ -3740,6 +3781,24 @@ files = [
 
 [package.dependencies]
 wagtail = ">=3.0,<7"
+
+[[package]]
+name = "wagtail-modeladmin"
+version = "2.0.0"
+description = "Add any model in your project to the Wagtail admin. Formerly wagtail.contrib.modeladmin."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "wagtail_modeladmin-2.0.0-py3-none-any.whl", hash = "sha256:36931ce4b2c2bb56d0367317b29786eb001344b7c9a1cd4f719d7f11efeae71b"},
+    {file = "wagtail_modeladmin-2.0.0.tar.gz", hash = "sha256:3794c854b86d69ad1b2ec4f3ee5e6852ff8cb0505bd9151186ef26e0a88d84bc"},
+]
+
+[package.dependencies]
+Wagtail = ">=5.2"
+
+[package.extras]
+docs = ["Sphinx (>=6.0)", "myst_parser (>=0.18.1,<1.0)", "pyenchant (>=3.1.1,<4)", "sphinx-autobuild (>=0.6.0)", "sphinx-wagtail-theme (==6.2.0)", "sphinx_copybutton (>=0.5)", "sphinxcontrib-spelling (>=8.0,<9.0)"]
+testing = ["dj-database-url (>=2.0.0)", "pre-commit (<3.0)"]
 
 [[package]]
 name = "wagtail-seo"
@@ -4102,4 +4161,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.12,<3.13"
-content-hash = "4b72450b9acc4b672eafef3fe3761babd6f0d0f5d46dfb16bd638ee44a8b0bef"
+content-hash = "3936f8128c108d114fbc8528945314aed3e17451a4b12989fc7ddf40eef5a940"

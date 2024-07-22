@@ -188,6 +188,9 @@ THIRD_PARTY_APPS = [
     "phonenumber_field",
     "widget_tweaks",
     "slippers",
+    "mjml",
+    "birdsong",
+    "wagtail_modeladmin",
 ]
 
 # Local apps
@@ -489,3 +492,11 @@ PHONENUMBER_DEFAULT_REGION = "US"
 # ----------------------------------------------------------------------
 # https://github.com/danihodovic/django-allauth-ui
 ALLAUTH_UI_THEME = "light"
+
+
+# django-mjml
+# ----------------------------------------------------------------------
+# https://github.com/liminspace/django-mjml?tab=readme-ov-file#advanced-settings
+# Must be False, else raises an ImproperlyConfigured error. Waiting on
+# this PR: https://github.com/liminspace/django-mjml/pull/189
+MJML_CHECK_CMD_ON_STARTUP = False
