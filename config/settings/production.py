@@ -92,14 +92,36 @@ DEFAULT_FROM_EMAIL = load_setting(
     default="Rotary Lights Website <noreply@rotarylights.org>",
 )
 
-# https://docs.djangoproject.com/en/dev/ref/settings/#server-email
-SERVER_EMAIL = load_setting("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-host
+EMAIL_HOST = load_setting("DJANGO_EMAIL_HOST")
+
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-port
+EMAIL_PORT = load_setting("DJANGO_EMAIL_PORT")
+
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-host
+EMAIL_HOST_PASSWORD = load_setting(
+    "DJANGO_EMAIL_HOST_PASSWORD", try_env=True
+)  # TODO: False
+
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-host-user
+EMAIL_HOST_USER = load_setting("DJANGO_EMAIL_HOST_USER")
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-subject-prefix
 EMAIL_SUBJECT_PREFIX = load_setting(
     "DJANGO_EMAIL_SUBJECT_PREFIX",
     default="[Rotary Lights] ",
 )
+
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-use-tls
+EMAIL_USE_TLS = load_setting("DJANGO_EMAIL_USE_TLS", default=True)
+
+# https://docs.djangoproject.com/en/dev/ref/settings/#server-email
+SERVER_EMAIL = load_setting("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
+
+
 
 # ADMIN
 # ------------------------------------------------------------------------------
