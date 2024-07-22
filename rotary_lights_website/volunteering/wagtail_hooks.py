@@ -1,6 +1,13 @@
+from birdsong.wagtail_hooks import (
+    BirdsongAdminGroup,
+    CampaignAdmin,
+    ContactAdmin,
+    modeladmin_re_register,
+)
 from wagtail import hooks
 from wagtail.snippets.models import register_snippet
 
+from rotary_lights_website.volunteering.models.emails import VolunteeringCampaign
 from rotary_lights_website.volunteering.views.snippets.events import (
     EventChooserViewSet,
     event_chooserviewset,
@@ -16,6 +23,15 @@ from rotary_lights_website.volunteering.views.snippets.volunteers import (
     VolunteerChooserViewSet,
     volunteer_chooserviewset,
 )
+
+
+class CampaignAdmin(CampaignAdmin):
+    model = VolunteeringCampaign
+
+
+@modeladmin_re_register
+class BirdsongAdminGroup(BirdsongAdminGroup):
+    items = (CampaignAdmin, ContactAdmin)
 
 
 @hooks.register("register_admin_viewset")

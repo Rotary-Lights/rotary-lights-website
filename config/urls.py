@@ -1,3 +1,4 @@
+from birdsong import urls as birdsong_urls
 from coderedcms import admin_urls as crx_admin_urls
 from coderedcms import search_urls as crx_search_urls
 from coderedcms import urls as crx_urls
@@ -57,10 +58,11 @@ if settings.DEBUG:
         urlpatterns += [path("__debug__/", include(debug_toolbar.urls))]
 
 urlpatterns += [
+    re_path(r"^logout/$", user_views.logout, name="wagtailadmin_logout"),
+    re_path(r"^login/$", user_views.login, name="wagtailadmin_login"),
+    path("mail/", include(birdsong_urls)),
     # For anything not caught by a more specific rule above, hand over to
     # the page serving mechanism. This should be the last pattern in
     # the list:
-    re_path(r"^logout/$", user_views.logout, name="wagtailadmin_logout"),
-    re_path(r"^login/$", user_views.login, name="wagtailadmin_login"),
     path("", include(crx_urls)),
 ]

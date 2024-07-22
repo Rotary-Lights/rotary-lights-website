@@ -1,0 +1,19 @@
+{% extends "birdsong/mail/base_email.html" %}
+
+{% block email_body %}
+<mj-section>
+    <mj-column>
+        <mj-text>Hello {{ contact.email }}!</mj-text>
+        {% for b in self.body %}
+            {{ b }}
+        {% endfor %}
+    </mj-column>
+</mj-section>
+<mj-section>
+    <mj-column>
+        <mj-text align="center">
+            Click <a href="{{ site.full_url }}{% url 'birdsong:unsubscribe' contact.id %}">here</a> to unsubscribe.
+        </mj-text>
+    </mj-column>
+</mj-section>
+{% endblock email_body %}

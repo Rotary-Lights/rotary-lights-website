@@ -1,6 +1,7 @@
 from address.forms import AddressField
 from allauth.account.forms import SignupForm
 from allauth.socialaccount.forms import SignupForm as SocialSignupForm
+from birdsong.models import Contact
 from django import forms
 from django.contrib.auth import forms as admin_forms
 from django.core.exceptions import MultipleObjectsReturned
@@ -50,13 +51,14 @@ class UserSignupForm(SignupForm):
                 return
 
     def save(self, request):
-        user = super().save(request)
-        Volunteer.objects.create(
+        user: User = super().save(request)
+        Volunteer.objects.get_or_create(
             user=user,
             address=request.POST["address"],
             primary_phone_number=request.POST["primary_phone_number"],
             secondary_phone_number=request.POST["secondary_phone_number"],
         )
+        Contact.objects.get_or_create(email=user.email)
         return user
 
 
