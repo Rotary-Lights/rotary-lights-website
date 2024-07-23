@@ -1,4 +1,3 @@
-from address.models import AddressField
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from modelcluster.models import ClusterableModel, ParentalKey
@@ -29,7 +28,7 @@ class Volunteer(ClusterableModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="+")
 
     # Contact Properties
-    address = AddressField(verbose_name=_("Mailing Address"))
+    address = models.CharField(_("Mailing Address"), max_length=150)
     primary_phone_number = PhoneNumberField(_("Primary Phone Number"))
     secondary_phone_number = PhoneNumberField(_("Secondary Phone Number"), blank=True)
 

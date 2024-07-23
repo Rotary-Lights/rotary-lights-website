@@ -1,4 +1,3 @@
-from address.forms import AddressField
 from allauth.account.forms import SignupForm
 from allauth.socialaccount.forms import SignupForm as SocialSignupForm
 from birdsong.models import Contact
@@ -39,7 +38,7 @@ class UserSignupForm(SignupForm):
 
     first_name = forms.CharField(max_length=150)
     last_name = forms.CharField(max_length=150)
-    address = AddressField()
+    address = forms.CharField(max_length=256)
     primary_phone_number = PhoneNumberField(region="US")
     secondary_phone_number = PhoneNumberField(region="US")
 
@@ -54,7 +53,7 @@ class UserSignupForm(SignupForm):
         user: User = super().save(request)
         Volunteer.objects.get_or_create(
             user=user,
-            address=request.POST["address"],
+            address={"raw": request.POST["address"]},
             primary_phone_number=request.POST["primary_phone_number"],
             secondary_phone_number=request.POST["secondary_phone_number"],
         )
