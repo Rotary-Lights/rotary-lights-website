@@ -1,3 +1,4 @@
+from typing import TYPE_CHECKING
 from birdsong import urls as birdsong_urls
 from coderedcms import admin_urls as crx_admin_urls
 from coderedcms import search_urls as crx_search_urls
@@ -11,6 +12,11 @@ from django.views import defaults as default_views
 from wagtail.documents import urls as wagtaildocs_urls
 
 from rotary_lights_website.users import views as user_views
+
+if TYPE_CHECKING:
+    from config.settings import local as LocalSettings
+
+    settings: LocalSettings
 
 urlpatterns = [
     # Admin, use {% url 'admin:index' %}
