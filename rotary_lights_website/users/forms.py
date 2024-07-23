@@ -53,7 +53,7 @@ class UserSignupForm(SignupForm):
         user: User = super().save(request)
         Volunteer.objects.get_or_create(
             user=user,
-            address={"raw": request.POST["address"]},
+            address=request.POST["address"],
             primary_phone_number=request.POST["primary_phone_number"],
             secondary_phone_number=request.POST["secondary_phone_number"],
         )
