@@ -225,7 +225,7 @@ AUTHENTICATION_BACKENDS = [
 AUTH_USER_MODEL = "users.User"
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
-LOGIN_REDIRECT_URL = "/admin/account/"
+LOGIN_REDIRECT_URL = f"/{load_setting("WAGTAIL_ADMIN_URL", str)}account/"
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
 LOGIN_URL = "account_login"
