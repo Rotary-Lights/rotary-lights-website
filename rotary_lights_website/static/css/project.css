@@ -17,6 +17,7 @@
 .text-white-heading>h3,
 .text-white-heading>h4,
 .text-white-heading>h5,
-.text-white-heading>h6 {
+.text-white-heading>h6,
+.text-white-p>p {
   color: white !important;
 }
