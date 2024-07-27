@@ -16,7 +16,7 @@ class RotaryWebPage(CoderedWebPage):
         verbose_name = "Web Page"
         verbose_name_plural = "Web Pages"
 
-    template = "coderedcms/pages/web_page_notitle.html"
+    template = "rotary_lights/pages/web_page_notitle.html"
 
 
 class RotaryArticleIndexPage(CoderedArticleIndexPage):
