@@ -38,7 +38,7 @@ class RotaryArticlePage(CoderedArticlePage):
 
     parent_page_types = ["content.RotaryArticleIndexPage"]
     subpage_types = []
-    template = "coderedcms/pages/article_page.html"
+    template = "rotary_lights/pages/article_page.html"
 
 
 class RotaryEventIndexPage(CoderedEventIndexPage):
@@ -62,7 +62,7 @@ class RotaryEventPage(CoderedEventPage):
 
     parent_page_types = ["content.RotaryEventIndexPage"]
     subpage_types = []
-    template = "coderedcms/pages/event_page.html"
+    template = "rotary_lights/pages/event_page.html"
 
 
 class RotaryEventOccurrence(CoderedEventOccurrence):
