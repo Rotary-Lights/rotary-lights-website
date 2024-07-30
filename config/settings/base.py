@@ -131,6 +131,12 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = load_setting(
     default=None,
 )
 
+# https://docs.djangoproject.com/en/5.0/ref/settings/#std-setting-DATA_UPLOAD_MAX_MEMORY_SIZE
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB
+
+# https://docs.djangoproject.com/en/5.0/ref/settings/#std-setting-FILE_UPLOAD_MAX_MEMORY_SIZE
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB
+
 
 # Apps
 # ----------------------------------------------------------------------
