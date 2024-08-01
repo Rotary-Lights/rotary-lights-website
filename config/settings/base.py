@@ -19,7 +19,7 @@ DEBUG = load_setting("DJANGO_DEBUG", bool, default=False)
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = load_setting(
     "DJANGO_SECRET_KEY",
-    try_env=DEBUG,
+    try_env=True,
 )
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
