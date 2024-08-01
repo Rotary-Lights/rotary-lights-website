@@ -40,6 +40,8 @@ PANELS = [
                 ]
             ),
             FieldPanel("address"),
+            FieldPanel("notes"),
+            FieldPanel("notable_skills"),
         ],
         heading=_("Basic Properties"),
     ),

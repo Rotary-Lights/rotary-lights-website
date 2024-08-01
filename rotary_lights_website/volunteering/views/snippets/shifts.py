@@ -28,6 +28,7 @@ shift_chooserviewset = ShiftChooserViewSet("shift_chooser")
 PANELS = [
     MultiFieldPanel(
         children=[
+            FieldPanel("name"),
             FieldPanel("activity"),
             FieldRowPanel(children=[FieldPanel("start_date"), FieldPanel("end_date")]),
         ],

@@ -39,3 +39,8 @@ class Volunteer(ClusterableModel):
     def __str__(self) -> str:
         name = f"{self.user.first_name} {self.user.last_name}"
         return name.strip() or str(self.user.username)
+
+    # Report Helpers
+
+    def get_email(self) -> str:
+        return self.user.email

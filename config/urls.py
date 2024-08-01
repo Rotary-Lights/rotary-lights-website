@@ -1,4 +1,6 @@
 from typing import TYPE_CHECKING
+
+from allauth.account.views import LoginView, LogoutView
 from birdsong import urls as birdsong_urls
 from coderedcms import admin_urls as crx_admin_urls
 from coderedcms import search_urls as crx_search_urls
@@ -10,8 +12,6 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include, path, re_path
 from django.views import defaults as default_views
 from wagtail.documents import urls as wagtaildocs_urls
-
-from rotary_lights_website.users import views as user_views
 
 if TYPE_CHECKING:
     from config.settings import local as LocalSettings
@@ -64,8 +64,8 @@ if settings.DEBUG:
         urlpatterns += [path("__debug__/", include(debug_toolbar.urls))]
 
 urlpatterns += [
-    re_path(r"^logout/$", user_views.logout, name="wagtailadmin_logout"),
-    re_path(r"^login/$", user_views.login, name="wagtailadmin_login"),
+    re_path(r"^logout/$", LogoutView.as_view(), name="account_logout"),
+    re_path(r"^login/$", LoginView.as_view(), name="account_login"),
     path("mail/", include(birdsong_urls)),
     # For anything not caught by a more specific rule above, hand over to
     # the page serving mechanism. This should be the last pattern in

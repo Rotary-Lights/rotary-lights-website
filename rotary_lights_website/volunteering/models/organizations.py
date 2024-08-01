@@ -88,10 +88,39 @@ class Organization(ClusterableModel):
         blank=True,
     )
 
+    # Additional Information
+    notes = models.TextField(_("Notes"), blank=True)
+    notable_skills = models.TextField(_("Notable Skills"), blank=True)
+
     # Volunteering Properties
     shifts: Manager["Shift"]
     if TYPE_CHECKING:
         shifts: QuerySet["Shift"]
+
+    first_activity = models.ForeignKey(
+        "Activity",
+        verbose_name=_("First Activity"),
+        on_delete=models.CASCADE,
+        related_name="+",
+        null=True,
+        blank=True,
+    )
+    second_activity = models.ForeignKey(
+        "Activity",
+        verbose_name=_("Second Activity"),
+        on_delete=models.CASCADE,
+        related_name="+",
+        null=True,
+        blank=True,
+    )
+    third_activity = models.ForeignKey(
+        "Activity",
+        verbose_name=_("Third Activity"),
+        on_delete=models.CASCADE,
+        related_name="+",
+        null=True,
+        blank=True,
+    )
 
     class Meta(ClusterableModel.Meta):
         verbose_name = _("Organization")
@@ -99,3 +128,8 @@ class Organization(ClusterableModel):
 
     def __str__(self) -> str:
         return str(self.name)
+
+    # Report Helpers
+
+    def count_members(self) -> int:
+        return self.owners.count() + self.members.count()
