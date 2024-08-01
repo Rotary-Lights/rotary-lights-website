@@ -42,5 +42,11 @@ class Volunteer(ClusterableModel):
 
     # Report Helpers
 
+    def get_first_name(self) -> str:
+        return self.user.first_name
+
+    def get_last_name(self) -> str:
+        return self.user.last_name
+
     def get_email(self) -> str:
         return self.user.email
