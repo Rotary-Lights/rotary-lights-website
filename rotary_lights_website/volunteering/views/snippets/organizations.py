@@ -80,13 +80,11 @@ PANELS = [
     ),
     MultiFieldPanel(
         children=[
-            MultipleChooserPanel(
-                "shifts",
-                chooser_field_name="shift",
-                label=_("Participating Shifts"),
-            )
+            FieldPanel("first_activity"),
+            FieldPanel("second_activity"),
+            FieldPanel("third_activity"),
         ],
-        heading=_("Volunteering Properties"),
+        heading=_("Desired Activities"),
         classname="collapsed",
     ),
 ]
@@ -176,7 +174,9 @@ class OrganizationsIndexView(IndexView):
     def get_queryset(self):
         # Limit the organizations to those of the user.
         queryset = super().get_queryset()
-        return queryset.filter(owners__owner__user=self.request.user)
+        if not self.request.user.is_staff:
+            return queryset.filter(owners__owner__user=self.request.user)
+        return queryset
 
 
 class OrganizationViewSet(SnippetViewSet):
