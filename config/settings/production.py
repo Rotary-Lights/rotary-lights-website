@@ -122,7 +122,6 @@ EMAIL_USE_TLS = load_setting("DJANGO_EMAIL_USE_TLS", default=True)
 SERVER_EMAIL = load_setting("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
 
 
-
 # ADMIN
 # ------------------------------------------------------------------------------
 # Django Admin URL regex.

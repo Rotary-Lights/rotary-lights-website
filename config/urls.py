@@ -9,7 +9,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.urls import include, path, re_path
+from django.urls import include, path
 from django.views import defaults as default_views
 from wagtail.documents import urls as wagtaildocs_urls
 
@@ -66,8 +66,8 @@ if settings.DEBUG:
         urlpatterns += [path("__debug__/", include(debug_toolbar.urls))]
 
 urlpatterns += [
-    re_path(r"^logout/$", user_views.logout, name="wagtailadmin_logout"),
-    re_path(r"^login/$", LoginView.as_view(), name="account_login"),
+    path("logout/", user_views.logout, name="wagtailadmin_logout"),
+    path("login/", LoginView.as_view(), name="account_login"),
     path("mail/", include(birdsong_urls)),
     # For anything not caught by a more specific rule above, hand over to
     # the page serving mechanism. This should be the last pattern in

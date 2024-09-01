@@ -39,8 +39,11 @@ class UserSignupForm(SignupForm):
     first_name = forms.CharField(max_length=150)
     last_name = forms.CharField(max_length=150)
     address = forms.CharField(max_length=256)
-    primary_phone_number = PhoneNumberField(region="US")
-    secondary_phone_number = PhoneNumberField(region="US")
+    primary_phone_number = PhoneNumberField(label="Cell Phone Number", region="US")
+    secondary_phone_number = PhoneNumberField(
+        label="Organization/Home Phone Number",
+        region="US",
+    )
 
     def full_clean(self):
         try:

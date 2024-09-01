@@ -29,8 +29,8 @@ class Volunteer(ClusterableModel):
 
     # Contact Properties
     address = models.CharField(_("Mailing Address"), max_length=150)
-    primary_phone_number = PhoneNumberField(_("Primary Phone Number"))
-    secondary_phone_number = PhoneNumberField(_("Secondary Phone Number"), blank=True)
+    primary_phone_number = PhoneNumberField(_("Cell Phone Number"))
+    secondary_phone_number = PhoneNumberField(_("Organization/Home Phone Number"))
 
     class Meta(ClusterableModel.Meta):
         verbose_name = _("Volunteer")

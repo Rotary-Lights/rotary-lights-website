@@ -1,6 +1,6 @@
 import re
 
-from django.forms import Media
+from django.forms import Media, Textarea
 from django.utils.translation import gettext_lazy as _
 from wagtail.admin.panels import (
     FieldPanel,
@@ -41,7 +41,14 @@ PANELS = [
             ),
             FieldPanel("address"),
             FieldPanel("notes"),
-            FieldPanel("notable_skills"),
+            FieldPanel(
+                "notable_skills",
+                widget=Textarea(
+                    attrs={
+                        "placeholder": "High Lift Operator, Electrician, Welder, etc",
+                    },
+                ),
+            ),
         ],
         heading=_("Basic Properties"),
     ),

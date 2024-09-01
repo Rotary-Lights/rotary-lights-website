@@ -6,7 +6,7 @@ from coderedcms.models import (
     CoderedEventPage,
     CoderedWebPage,
     CoderedEmail,
-    CoderedStreamFormPage
+    CoderedStreamFormPage,
 )
 from modelcluster.fields import ParentalKey
 
@@ -72,7 +72,6 @@ class RotaryEventOccurrence(CoderedEventOccurrence):
 
 
 class RotaryFormPage(CoderedStreamFormPage):
-
     class Meta:
         verbose_name = "Form Page"
         verbose_name_plural = "Form Pages"
@@ -80,5 +79,6 @@ class RotaryFormPage(CoderedStreamFormPage):
     template = "rotary_lights/pages/stream_form_page.html"
     landing_page_template = "rotary_lights/pages/stream_form_page.html"
 
+
 class RotaryFormConfirmEmail(CoderedEmail):
-    page = ParentalKey('RotaryFormPage', related_name='confirmation_emails')
+    page = ParentalKey("RotaryFormPage", related_name="confirmation_emails")
